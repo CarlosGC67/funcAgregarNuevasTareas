@@ -20,5 +20,37 @@ function agregarTarea (tarea) {
     lista.insertAdjacentHTML("beforeend", elemento);
     
     //Agrega la const elemento justo antes de que termine lista para que si se agregan
-    //mas tareas pueda mostrarlas en secuencia de creacion
+    //mas tareas pueda mostrarlas en secuencia de creacion  
                     }
+
+    botonEnter.addEventListener('click', () => {
+        const tarea = input.value
+        if (tarea) {
+            agregarTarea(tarea)
+        }
+        input.value =''
+    })
+    //Explicacion de la funcion:
+    //primero agregamos un addevent listener ala constante del botonEnter para que cuando se haga click se ejecute una funcion arrow
+    //luego agregamos la constante tarea con el valor que tenga el input guardandolo en ella
+    //si hay algo en la constante tarea 
+    //se ejecuta la funcion agregarTarea con el argumento de la constante tarea
+    //al finalizar la tarea se limpia el input para que se pueda agregar mas tareas
+
+    document.addEventListener('keyup', function(event){
+        if(event.key == 'Enter'){
+            const tarea = input.value
+            if(tarea){
+                agregarTarea(tarea)
+            }
+            input.value= ''
+        }
+    })
+
+    //Explicacion de la funcion:
+    //Primero agregamos un addevent listener al documento para cuando se levante un tecla se ejecuente un evento
+    //Si la tecla es Enter se ejecuta lo siguiente
+    //se crea la constante tarea con lo que tenga el valor de input
+    //si tiene algo la constante tarea entonces se ejecuta
+    //La funcion agregar tarea con el argumento tarea
+    //Al final se borra el valor de input para que se pueda agregar mas tareas
