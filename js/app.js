@@ -2,15 +2,25 @@ const fecha = document.querySelector('#fecha');
 const lista = document.querySelector('#lista');
 const input = document.querySelector('#input');
 const botonEnter = document.querySelector('#boton-enter');
+const check = 'fa-check-circle';
+const uncheck = 'fa-circle';
+const linetrough = 'line-through';
+let id = 0;
 
 //Funcion para agregar tareas
 
-function agregarTarea (tarea) {
+function agregarTarea (tarea, id, realizado, eliminado) {
+
+    if (eliminado) {return}                         //Si la tarea es eliminada no se agrega
+
+    const REALIZADO = realizado ?check :uncheck;
+    const line = realizado ?linetrough :'';
+
     const elemento = `
                        <li id="elemento">                                      
-                       <i class="far fa-circle co" data="realizado" id="0"></i>
-                       <p class="text"> ${tarea} </p>
-                       <i class="fas fa-trash de" data="eliminado" id="0"></i>
+                       <i class="far ${REALIZADO} co" data="realizado" id="${id}"></i>
+                       <p class="text ${line}"> ${tarea} </p>
+                       <i class="fas fa-trash de" data="eliminado" id="${id}"></i>
                        </li>
                       `
                       //Primero agregamos una etiqueta lista con el id elemento para llamar a la clase css
@@ -23,12 +33,26 @@ function agregarTarea (tarea) {
     //mas tareas pueda mostrarlas en secuencia de creacion  
                     }
 
+    // Funcion tarea Realizada                
+    function tareaRealizada(element) {
+        element.classList.toggle(check)
+        element.classList.toggle(uncheck)
+    }
+    //Explicacion de la funcion:
+    //Se desarrola la funcion tareaRealizada recibiendo el argumento element de la funcion de evento en lista
+    //Se usa el toggle para que cambie el estado de check y uncheck
+
+
+
+                    
+
     botonEnter.addEventListener('click', () => {
         const tarea = input.value
         if (tarea) {
-            agregarTarea(tarea)
+            agregarTarea(tarea, id, false, false)
         }
         input.value =''
+        id++
     })
     //Explicacion de la funcion:
     //primero agregamos un addevent listener ala constante del botonEnter para que cuando se haga click se ejecute una funcion arrow
@@ -41,9 +65,10 @@ function agregarTarea (tarea) {
         if(event.key == 'Enter'){
             const tarea = input.value
             if(tarea){
-                agregarTarea(tarea)
+                agregarTarea(tarea, id, false, false)
             }
             input.value= ''
+            id++
         }
     })
 
@@ -54,3 +79,21 @@ function agregarTarea (tarea) {
     //si tiene algo la constante tarea entonces se ejecuta
     //La funcion agregar tarea con el argumento tarea
     //Al final se borra el valor de input para que se pueda agregar mas tareas
+
+    lista.addEventListener('click', function(event){
+        const element = event.target 
+        const elementData = element.attributes.data.value
+        if(elementData === 'realizado'){
+            tareaRealizada(element)
+        }
+        else if(elementData === 'eliminado'){
+            tareaEliminada(element)
+        }    
+    })
+
+    //Explicacion de la funcion:
+    //Primero agregamos un addevent listener ala constante lista para que cuando se haga click se ejecute de tipo evento
+    //luego creamos la constante element con el valor del target del evento
+    //luego creamos la constante elementData con el atributo data del elemento para conocer su valor
+    //Si el valor de elementData es realizado se ejecuta la funcion tareaRealizada
+    //Si el valor de elementData es eliminado se ejecuta la funcion tareaEliminada
